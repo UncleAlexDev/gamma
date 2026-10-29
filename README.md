@@ -1,6 +1,10 @@
 # Gamma Detector Calibration
 
 Compatible with BTO and COM ports.
+(draft description)
+
+### Description
+[under developing]
 
 ### Loading Data from the Last Test
 
@@ -75,8 +79,8 @@ Operating HV: 1425
 33 1650 345.20 345.40
 34 1675 345.60 349.20
 35 1700 361.40 356.80
-36     1725   363.40   380.80
-37     1750   368.20   372.40
+36 1725   363.40   380.80
+37 1750   368.20   372.40
 ```
 
 In the API test, the simulation is started by clicking the "Start API Test" button.
