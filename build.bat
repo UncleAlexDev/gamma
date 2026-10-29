@@ -18,9 +18,12 @@
 
 @echo build %EXEFILE% ...
 
-@IF NOT EXIST "gamma.pro" (
+:: for %%i in (*.pro) do set "found=1"
+
+dir /b *.pro >nul 2>&1
+if errorlevel 1 (
     @echo.
-    @echo ERROR: not found gamma.pro - directory not for building
+    @echo ERROR: not found *.pro - directory not for building
     @echo.
     @pause
     @exit /b 1
@@ -47,7 +50,7 @@
 )
 
 mingw32-make.exe distclean 2>NUL
-qmake.exe gamma.pro -spec win32-g++ "CONFIG+=%BUILDTYPE%"
+qmake.exe -spec win32-g++ "CONFIG+=%BUILDTYPE%"
 @if "%ERRORLEVEL%" NEQ "0" (
     @echo.
     @echo ERROR: Can't create build configuration

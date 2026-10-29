@@ -7,7 +7,7 @@ call :GET_CURRENT_DATE
 :: -----------------------------------------------
 @setlocal enabledelayedexpansion
 
-@SET PRJNAME=gamma-bto
+@for %%I in ("%~dp0.") do @SET PRJNAME=%%~nxI
 @SET APPNAME=gamma
 
 @SET EXEFILE=release\%APPNAME%.exe
@@ -39,10 +39,11 @@ call build.bat
 @echo FILE: %EXEFILE%
 
 :: -----------------------------------------------
-@for /f "tokens=3" %%A in ('findstr /C:"#define VER_NUM " "%VERFILE%"') do (
+for /f "delims=" %%a in ('where /r . ver.h') do set "VERFILE=%%a"
+@for /f "tokens=3" %%A in ('findstr /C:"#define VER_NUM " "%VERFILE%"') do @(
     @set "VERSION=%%~A"
 )
-echo "VER:  %VERSION%"
+@echo VER:  %VERSION%
 
 :: -----------------------------------------------
 @for /f "tokens=1-3 delims=/. " %%a in ('date /t') do @(@set dat=%%c%%b%%a)
@@ -53,14 +54,16 @@ echo "VER:  %VERSION%"
 :: -----------------------------------------------
 @SET TARGETNAME=%PRJNAME%-%DT%
 
-@SET TARGET_BIN_DIR=..\%PRJNAME%-bin-%VERSION%-%osVer%-%osArch%-%DT%
-@SET TARGET_SRC_DIR=..\%PRJNAME%-src-%VERSION%-%osVer%-%osArch%-%DT%
+@SET TARGET_BIN_DIR=..\%PRJNAME%-%VERSION%-bin-%osVer%-%osArch%-%DT%
+@SET TARGET_SRC_DIR=..\%PRJNAME%-%VERSION%-src-%osVer%-%osArch%-%DT%
 
 @rd /s /q %TARGET_BIN_DIR% 2>NUL 
 @rd /s /q %TARGET_SRC_DIR% 2>NUL
                       
 :: -----------------------------------------------
-xcopy /E /V /Y /H /Q dist\* %TARGET_BIN_DIR%\*
+for /f "delims=" %%i in ('dir /ad /b dist') do set "DISTDIR=dist\%%i"
+
+xcopy /E /V /Y /H /Q %DISTDIR% %TARGET_BIN_DIR%\*
 @if "%ERRORLEVEL%" NEQ "0" (
     @echo.
     @echo ERROR: copy error - %PRJNAME%\dist to %TARGET_BIN_DIR%

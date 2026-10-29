@@ -18,6 +18,7 @@ Makefile*
 dist/*
 reports/*
 compile_commands.json
+images/.idea
 
 # Prerequisites
 *.d

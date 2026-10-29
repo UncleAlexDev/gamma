@@ -3,25 +3,24 @@
 @call :GET_CURRENT_DATE
 
 :: -----------------------------------------------
-@SET PRJNAME=gamma-bto
+@for %%I in ("%~dp0.") do @SET PRJNAME=%%~nxI
 
 :: -----------------------------------------------
-@SET VERFILE=main\ver.h
+for /f "delims=" %%a in ('where /r . ver.h') do set "VERFILE=%%a"
 @for /f "tokens=3" %%A in ('findstr /C:"#define VER_NUM " "%VERFILE%"') do @(
     @set "VERSION=%%~A"
 )
 @echo VER:  %VERSION%
 
-
 :: -----------------------------------------------
 @SET BACKUPDIR=..\%PRJNAME%-backups
-@SET BACKUPNAME=%PRJNAME%-src-%VERSION%-%osVer%-%osArch%-%DT%
+@SET BACKUPNAME=%PRJNAME%-%VERSION%-src-%osVer%-%osArch%-%DT%
 
 :: -----------------------------------------------
-@SET tmpdir=%PRJNAME%-src-%VERSION%-%osVer%-%osArch%-%DT%
+@SET tmpdir=%BACKUPNAME%
 @rmdir /s /q %tmpdir% 2>NUL
 
-@set target=..\%tmpdir%\%PRJNAME%-%VERSION%-%osVer%-%osArch%-%DT%
+@set target=..\%tmpdir%\%BACKUPNAME%
 @mkdir %target% >NUL
 
 xcopy /S /Y /V /H /Q * %target%\* >NUL
